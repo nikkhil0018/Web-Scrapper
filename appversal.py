@@ -4,9 +4,10 @@ import csv
 
 source = requests.get('https://play.google.com/store/search?q=fitness%60apps&c=apps&hl=en').text
 
+
 csv_file = open('appData.csv', 'w')
 csv_writer = csv.writer(csv_file)
-csv_writer.writerow(['NAME', 'URL', 'EMAIL', 'RATING'])
+csv_writer.writerow(['NAME', 'URL', 'EMAIL'])
 
 soup = BeautifulSoup(source, 'lxml')
 
@@ -39,14 +40,14 @@ for item in soup.find_all(class_='Q9MA7b'):
     newSource = requests.get(appUrl).text
     newSoup = BeautifulSoup(newSource, 'lxml')
     appEmail = newSoup.find('a', class_='euBY6b').text
-    appRating = newSoup.find(class_='pf5lIe')
-    appRating = appRating.find()['aria-label']
-    # appDisc = newSoup.find(class_='IQ1z0d').text
     print(appEmail)
-    print(appRating)
+    # appRating = newSoup.find(class_='pf5lIe')
+    # appRating = appRating.find()['aria-label']
+    # appDisc = newSoup.find(class_='IQ1z0d').text
+    # print(appRating)
     # print(appDisc)
 
-    csv_writer.writerow([appName, appUrl, appEmail, appRating])
+    csv_writer.writerow([appName, appUrl, appEmail])
 
     print('------------------------------------------')
 
