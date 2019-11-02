@@ -8,11 +8,11 @@ import csv
 browser = webdriver.Firefox('/usr/local/bin')
 
 # Tell Selenium to get the URL you're interested in.
-browser.get("https://play.google.com/store/search?q=medicine%20app&c=apps")
+browser.get("https://play.google.com/store/search?q=herb&c=apps")
 
-csv_file = open('appData.csv', 'w')
+csv_file = open('HerbUSA.csv', 'w')
 csv_writer = csv.writer(csv_file)
-csv_writer.writerow(['NAME', 'URL', 'EMAIL'])
+csv_writer.writerow(['NAME', 'URL', 'EMAIL', 'RATING'])
 
 lenOfPage = browser.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
 match = False
@@ -39,21 +39,19 @@ for item in soup.find_all(class_='Q9MA7b'):
     newSource = requests.get(appUrl).text
     newSoup = BeautifulSoup(newSource, 'lxml')
     appEmail = newSoup.find('a', class_='euBY6b').text
-    print(appEmail)
-    # appRating = newSoup.find(class_='pf5lIe')
-    # appRating = appRating.find()['aria-label']
     # appDisc = newSoup.find(class_='IQ1z0d').text
-    # print(appRating)
+    print(appEmail)
     # print(appDisc)
 
-    csv_writer.writerow([appName,appUrl,appEmail])
+    try:
+        appRating = newSoup.find(class_='pf5lIe')
+        appRating = appRating.find()['aria-label']
+    except Exception as e:
+        appRating = None
 
+    print(appRating)
     print('------------------------------------------')
+    csv_writer.writerow([appName,appUrl,appEmail, appRating])
 
 csv_file.close()
-print('****DONE*****DONE*******DONE******')
-
-# <div class="b8cIId ReQCgd Q9MA7b"><a href="/store/apps/details?id=com.e_steps.herbs"><div class="WsMG1c nnK0zc" title="Herbs Encyclopedia">Herbs Encyclopedia</div></a><div class="cqtbn"></div></div>
-
-
-# < div class = "b8cIId ReQCgd Q9MA7b" > < a href = "/store/apps/details?id=com.medicinal.herbs.plant" > < div class = "WsMG1c nnK0zc" title = "Medicinal Plants &amp; Herbs" > Medicinal Plants & amp; Herbs < / div > < / a > < div class = "cqtbn" > < / div > < / div >
+print('-----DONE*****DONE*****DONE******DONE*****DONE-----')
